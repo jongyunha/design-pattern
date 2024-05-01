@@ -13,7 +13,7 @@ const port = ":4000"
 
 type application struct {
 	templateMap map[string]*template.Template
-	config 	appConfig
+	config      appConfig
 }
 
 type appConfig struct {
@@ -21,9 +21,11 @@ type appConfig struct {
 }
 
 func main() {
-	app := application{}
+	app := application{
+		templateMap: make(map[string]*template.Template),
+	}
 
-	flag.BoolVar(&app.config.useCache, "cache", false, "Use a template cache")
+	flag.BoolVar(&app.config.useCache, "cache", false, "Use template cache")
 	flag.Parse()
 
 	srv := &http.Server{
@@ -37,7 +39,9 @@ func main() {
 
 	fmt.Println("Starting web application on port", port)
 
-	if err := srv.ListenAndServe(); err != nil {
+	err := srv.ListenAndServe()
+	if err != nil {
 		log.Fatal(err)
 	}
+
 }
